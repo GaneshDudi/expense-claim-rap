@@ -1,0 +1,5 @@
+@EndUserText.label: 'Expense Claim: Service.'
+define service ZGS_UI_EXPCLAIM {
+  expose ZGS_C_ExpClaim as ExpenseClaim;
+  expose ZGS_C_ExpItem  as ExpenseItem;
+}

@@ -1,0 +1,42 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName:       'Expense Item',
+    typeNamePlural: 'Expense Items',
+    title:          { type: #STANDARD, value: 'Description' }
+  }
+}
+annotate entity ZGS_C_ExpItem with
+{
+  @UI.facet: [
+    { id:       'ItemDetails',
+      purpose:  #STANDARD,
+      type:     #IDENTIFICATION_REFERENCE,
+      label:    'Item Details',
+      position: 10 }
+  ]
+  @UI.hidden: true
+  ItemUUID;
+
+  @UI.hidden: true
+  ClaimUUID;
+
+  @UI.lineItem:       [{ position: 10, label: 'Date' }]
+  @UI.identification: [{ position: 10, label: 'Date' }]
+  ExpenseDate;
+
+  @UI.lineItem:       [{ position: 20, label: 'Category' }]
+  @UI.identification: [{ position: 20, label: 'Category' }]
+  Category;
+
+  @UI.lineItem:       [{ position: 30, label: 'Description' }]
+  @UI.identification: [{ position: 30, label: 'Description' }]
+  Description;
+
+  @UI.lineItem:       [{ position: 40, label: 'Amount' }]
+  @UI.identification: [{ position: 40, label: 'Amount' }]
+  Amount;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

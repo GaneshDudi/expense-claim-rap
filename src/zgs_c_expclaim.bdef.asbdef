@@ -1,0 +1,23 @@
+projection;
+strict ( 2 );
+
+define behavior for ZGS_C_ExpClaim alias Claim
+{
+  use create;
+  use update;
+  use delete;
+  use action submit;
+  use action approve;
+   use action reject;
+    use action copyClaim;
+    use action approveAllSubmitted;
+  use association _Item { create; }
+}
+
+define behavior for ZGS_C_ExpItem alias Item
+{
+  use update;
+  use delete;
+
+  use association _Claim;
+}

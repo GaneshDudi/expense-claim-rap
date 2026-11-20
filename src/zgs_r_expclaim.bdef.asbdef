@@ -1,0 +1,77 @@
+managed implementation in class zbp_gs_r_expclaim unique;
+strict ( 2 );
+
+define behavior for ZGS_R_ExpClaim alias Claim
+persistent table zgs_exp_claim
+lock master
+authorization master ( instance )
+//etag master <field_name>
+{
+  field ( numbering : managed, readonly ) ClaimUUID;
+  field ( readonly ) ClaimID, Status, TotalAmount,RejectionReason,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) Employee;
+  field ( mandatory ) CurrencyCode;
+  create;
+   internal action recalcTotal;
+    static action approveAllSubmitted;
+     factory action copyClaim [1];
+  update ( features : instance );
+  delete ( features : instance );
+  association _Item { create; }
+  action ( features : instance ) reject parameter ZGS_A_RejectReason result [1] $self;
+  action ( features : instance ) submit result [1] $self;
+  action ( features : instance ) approve result [1] $self;
+  //action reject parameter ZGS_A_RejectReason result [1] $self;
+  //action submit result [1] $self;
+  //action approve result [1] $self;//
+  determination setStatusOpen on modify { create; }
+  determination setClaimID on save { create; }
+  validation validateEmployee on save { create; field Employee; }
+  validation validateCurrency on save { create; field CurrencyCode; }
+  mapping for zgs_exp_claim
+  {
+    ClaimUUID          = claim_uuid;
+    ClaimID            = claim_id;
+    Employee           = employee;
+    Description        = description;
+    Status             = status;
+    RejectionReason    = rejection_reason;
+    TotalAmount        = total_amount;
+    CurrencyCode       = currency_code;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZGS_R_ExpItem alias Item
+persistent table zgs_exp_item
+lock dependent by _Claim
+authorization dependent by _Claim
+//etag master <field_name>
+{
+  field ( numbering : managed, readonly ) ItemUUID;
+  update;
+  delete;
+  field ( readonly ) ClaimUUID,LocalLastChangedAt;
+  field ( mandatory ) ExpenseDate, Amount, CurrencyCode;
+  association _Claim;
+  //determination calcTotal on modify { create; field Amount; }
+  determination calcTotal on modify { create; delete; field Amount; }
+  validation validateAmount on save { create; field Amount; }
+  validation validateDate on save { create; field ExpenseDate; }
+  mapping for zgs_exp_item
+  {
+    ItemUUID           = item_uuid;
+    ClaimUUID          = claim_uuid;
+    ExpenseDate        = expense_date;
+    Category           = category;
+    Description        = description;
+    Amount             = amount;
+    CurrencyCode       = currency_code;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

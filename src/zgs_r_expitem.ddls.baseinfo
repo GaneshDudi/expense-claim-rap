@@ -1,0 +1,10 @@
+{
+  "BASEINFO": {
+    "FROM": [
+      "ZGS_EXP_ITEM"
+    ],
+    "ASSOCIATED": [
+      "ZGS_R_EXPCLAIM"
+    ]
+  }
+}
